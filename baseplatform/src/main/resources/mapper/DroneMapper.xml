@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    MyBatis Mapper XML文件
+    文件名：DroneMapper.xml
+    对应接口：com.md.basePlatform.mapper.DroneMapper
+    功能：定义无人机数据访问的SQL语句
+    支持数据库：SQLite / MySQL
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+    mapper标签：定义命名空间
+    namespace属性：对应Mapper接口的全限定类名
+    MyBatis会通过namespace找到对应的接口，并将SQL语句与接口方法关联
+-->
+<mapper namespace="com.md.basePlatform.mapper.DroneMapper">
+
+    <!-- 
+        resultMap标签：定义结果映射
+        id属性：resultMap的唯一标识，供select语句引用
+        type属性：映射的实体类类型（此处为Drone实体）
+        作用：将SQL查询结果的列与实体类的字段进行映射
+    -->
+    <resultMap id="DroneResultMap" type="com.md.basePlatform.entity.Drone">
+        <!-- 
+            id标签：映射主键字段
+            column属性：数据库表中的列名
+            property属性：实体类中的字段名
+        -->
+        <id column="id" property="id" />
+        
+        <!-- 
+            result标签：映射普通字段
+            column属性：数据库表中的列名
+            property属性：实体类中的字段名
+        -->
+        <result column="name" property="name" />
+        <result column="model" property="model" />
+        <result column="manufacturer" property="manufacturer" />
+        <result column="weight" property="weight" />
+        <result column="max_altitude" property="maxAltitude" />
+        <result column="max_flight_time" property="maxFlightTime" />
+        <result column="max_speed" property="maxSpeed" />
+        <result column="status" property="status" />
+        <result column="description" property="description" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 
+        SQL片段：定义通用的字段列表
+        id属性：片段的唯一标识
+        作用：复用SQL代码，避免重复书写
+    -->
+    <sql id="Base_Column_List">
+        id, name, model, manufacturer, weight, max_altitude, max_flight_time, 
+        max_speed, status, description, create_time, update_time
+    </sql>
+
+    <!-- 
+        select标签：查询所有无人机列表
+        id属性：对应Mapper接口中的方法名（findAll）
+        resultMap属性：引用上面定义的resultMap
+        功能：查询drone表中的所有记录
+    -->
+    <select id="findAll" resultMap="DroneResultMap">
+        SELECT 
+            <include refid="Base_Column_List" />  <!-- 引用字段列表片段 -->
+        FROM 
+            drone  <!-- 从drone表查询 -->
+        ORDER BY 
+            create_time DESC  <!-- 按创建时间降序排列 -->
+    </select>
+
+    <!-- 
+        select标签：根据ID查询单个无人机
+        id属性：对应Mapper接口中的方法名（findById）
+        resultMap属性：引用resultMap
+        parameterType属性：参数类型（Long类型的ID）
+        功能：根据主键ID查询单个无人机记录
+    -->
+    <select id="findById" parameterType="Long" resultMap="DroneResultMap">
+        SELECT 
+            <include refid="Base_Column_List" />
+        FROM 
+            drone
+        WHERE 
+            id = #{id}  <!-- #{id}：MyBatis参数占位符，自动防止SQL注入 -->
+    </select>
+
+    <!-- 
+        select标签：根据名称查询无人机列表
+        id属性：对应Mapper接口中的方法名（findByName）
+        resultMap属性：引用resultMap
+        parameterType属性：参数类型（String类型的名称）
+        功能：模糊查询名称包含指定关键词的无人机
+    -->
+    <select id="findByName" parameterType="String" resultMap="DroneResultMap">
+        SELECT 
+            <include refid="Base_Column_List" />
+        FROM 
+            drone
+        WHERE 
+            name LIKE #{name}  <!-- 使用LIKE进行模糊查询 -->
+        ORDER BY 
+            create_time DESC
+    </select>
+
+    <!-- 
+        select标签：根据型号查询无人机列表
+        id属性：对应Mapper接口中的方法名（findByModel）
+        resultMap属性：引用resultMap
+        parameterType属性：参数类型（String类型的型号）
+        功能：模糊查询型号包含指定关键词的无人机
+    -->
+    <select id="findByModel" parameterType="String" resultMap="DroneResultMap">
+        SELECT 
+            <include refid="Base_Column_List" />
+        FROM 
+            drone
+        WHERE 
+            model LIKE #{model}  <!-- 使用LIKE进行模糊查询 -->
+        ORDER BY 
+            create_time DESC
+    </select>
+
+    <!-- 
+        insert标签：插入新的无人机记录
+        id属性：对应Mapper接口中的方法名（insert）
+        parameterType属性：参数类型（Drone实体类）
+        useGeneratedKeys属性：是否使用自增主键
+        keyProperty属性：指定主键字段名（id）
+        keyColumn属性：指定数据库表中的主键列名（id）
+        功能：向drone表插入一条新记录
+    -->
+    <insert id="insert" parameterType="com.md.basePlatform.entity.Drone" 
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO drone (
+            name, model, manufacturer, weight, max_altitude, max_flight_time, 
+            max_speed, status, description, create_time, update_time
+        ) VALUES (
+            #{name},           <!-- 无人机名称 -->
+            #{model},          <!-- 无人机型号 -->
+            #{manufacturer},   <!-- 制造商 -->
+            #{weight},         <!-- 重量 -->
+            #{maxAltitude},    <!-- 最大飞行高度 -->
+            #{maxFlightTime},  <!-- 续航时间 -->
+            #{maxSpeed},       <!-- 最大速度 -->
+            #{status},         <!-- 状态 -->
+            #{description},    <!-- 描述 -->
+            #{createTime},     <!-- 创建时间 -->
+            #{updateTime}      <!-- 更新时间 -->
+        )
+    </insert>
+
+    <!-- 
+        update标签：更新无人机记录
+        id属性：对应Mapper接口中的方法名（update）
+        parameterType属性：参数类型（Drone实体类）
+        功能：根据ID更新无人机的所有字段
+    -->
+    <update id="update" parameterType="com.md.basePlatform.entity.Drone">
+        UPDATE drone 
+        SET 
+            name = #{name},           <!-- 更新名称 -->
+            model = #{model},          <!-- 更新型号 -->
+            manufacturer = #{manufacturer},   <!-- 更新制造商 -->
+            weight = #{weight},         <!-- 更新重量 -->
+            max_altitude = #{maxAltitude},    <!-- 更新最大高度 -->
+            max_flight_time = #{maxFlightTime},  <!-- 更新续航时间 -->
+            max_speed = #{maxSpeed},       <!-- 更新最大速度 -->
+            status = #{status},         <!-- 更新状态 -->
+            description = #{description},    <!-- 更新描述 -->
+            update_time = #{updateTime}      <!-- 更新时间 -->
+        WHERE 
+            id = #{id}  <!-- 根据ID更新 -->
+    </update>
+
+    <!-- 
+        delete标签：删除无人机记录
+        id属性：对应Mapper接口中的方法名（deleteById）
+        parameterType属性：参数类型（Long类型的ID）
+        功能：根据ID删除指定的无人机记录
+    -->
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM drone 
+        WHERE 
+            id = #{id}  <!-- 根据ID删除 -->
+    </delete>
+
+    <!-- 
+        select标签：统计无人机总数
+        id属性：对应Mapper接口中的方法名（count）
+        resultType属性：返回类型（Integer）
+        功能：统计drone表中的记录总数
+    -->
+    <select id="count" resultType="Integer">
+        SELECT COUNT(*) FROM drone
+    </select>
+
+</mapper>
