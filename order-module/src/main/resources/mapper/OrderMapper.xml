@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.order.mapper.OrderMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.order.entity.Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="discount_amount" property="discountAmount"/>
+        <result column="freight_amount" property="freightAmount"/>
+        <result column="pay_amount" property="payAmount"/>
+        <result column="status" property="status"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+        <result column="receiver_address" property="receiverAddress"/>
+        <result column="receiver_postal_code" property="receiverPostalCode"/>
+        <result column="payment_method" property="paymentMethod"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="payment_no" property="paymentNo"/>
+        <result column="express_company" property="expressCompany"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="ship_time" property="shipTime"/>
+        <result column="delivery_time" property="deliveryTime"/>
+        <result column="remark" property="remark"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 基础查询SQL -->
+    <sql id="Base_Column_List">
+        id, order_no, user_id, user_name, total_amount, discount_amount, freight_amount,
+        pay_amount, status, receiver_name, receiver_phone, receiver_address,
+        receiver_postal_code, payment_method, payment_time, payment_no,
+        express_company, express_no, ship_time, delivery_time, remark,
+        created_at, updated_at, deleted
+    </sql>
+
+    <!-- 分页查询订单列表 -->
+    <select id="selectOrderPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE deleted = 0
+        <if test="query.id != null">
+            AND id = #{query.id}
+        </if>
+        <if test="query.orderNo != null and query.orderNo != ''">
+            AND order_no LIKE CONCAT('%', #{query.orderNo}, '%')
+        </if>
+        <if test="query.userId != null">
+            AND user_id = #{query.userId}
+        </if>
+        <if test="query.userName != null and query.userName != ''">
+            AND user_name LIKE CONCAT('%', #{query.userName}, '%')
+        </if>
+        <if test="query.status != null and query.status != ''">
+            AND status = #{query.status}
+        </if>
+        <if test="query.minAmount != null">
+            AND pay_amount &gt;= #{query.minAmount}
+        </if>
+        <if test="query.maxAmount != null">
+            AND pay_amount &lt;= #{query.maxAmount}
+        </if>
+        <if test="query.startDate != null and query.startDate != ''">
+            AND created_at &gt;= #{query.startDate}
+        </if>
+        <if test="query.endDate != null and query.endDate != ''">
+            AND created_at &lt;= #{query.endDate}
+        </if>
+        ORDER BY
+        <choose>
+            <when test="query.sortBy == 'totalAmount'">
+                total_amount
+            </when>
+            <when test="query.sortBy == 'orderNo'">
+                order_no
+            </when>
+            <when test="query.sortBy == 'status'">
+                status
+            </when>
+            <otherwise>
+                created_at
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="query.sortOrder == 'asc'">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据订单编号查询订单 -->
+    <select id="selectByOrderNo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE order_no = #{orderNo} AND deleted = 0
+    </select>
+
+</mapper>

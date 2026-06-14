@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.order.mapper.OrderItemMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.order.entity.OrderItem">
+        <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_image" property="productImage"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="sku_code" property="skuCode"/>
+        <result column="price" property="price"/>
+        <result column="quantity" property="quantity"/>
+        <result column="subtotal" property="subtotal"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 基础查询SQL -->
+    <sql id="Base_Column_List">
+        id, order_id, order_no, product_id, product_name, product_image, sku_id, sku_code,
+        price, quantity, subtotal, created_at, updated_at, deleted
+    </sql>
+
+    <!-- 根据订单ID查询订单详情列表 -->
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM order_items
+        WHERE order_id = #{orderId} AND deleted = 0
+        ORDER BY created_at ASC
+    </select>
+
+    <!-- 根据订单编号查询订单详情列表 -->
+    <select id="selectByOrderNo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM order_items
+        WHERE order_no = #{orderNo} AND deleted = 0
+        ORDER BY created_at ASC
+    </select>
+
+    <!-- 批量插入订单详情 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO order_items (id, order_id, order_no, product_id, product_name, product_image,
+                                  sku_id, sku_code, price, quantity, subtotal, created_at, updated_at, deleted)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (
+            #{item.id},
+            #{item.orderId},
+            #{item.orderNo},
+            #{item.productId},
+            #{item.productName},
+            #{item.productImage},
+            #{item.skuId},
+            #{item.skuCode},
+            #{item.price},
+            #{item.quantity},
+            #{item.subtotal},
+            NOW(),
+            NOW(),
+            0
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据订单ID删除订单详情（逻辑删除） -->
+    <update id="deleteByOrderId">
+        UPDATE order_items
+        SET deleted = 1, updated_at = NOW()
+        WHERE order_id = #{orderId} AND deleted = 0
+    </update>
+
+</mapper>
