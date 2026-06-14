@@ -1,0 +1,21 @@
+---
+description: API 变更与文档同步规则
+alwaysApply: true
+---
+
+# API 文档同步规范
+
+## 触发规则
+
+- 新增/修改公共 API 时，必须同步更新 `harness-collab/04-api-docs/` 与 `harness-collab/func.md`
+- 删除 API 前先 `@Deprecated`，文档标注废弃说明与替代方案
+
+## Controller 注解要求
+
+- Controller 类必须有 `@Tag`
+- `@RequestMapping`/`@GetMapping` 等方法必须有 `@Operation`
+
+## 交付要求
+
+- 每次代码交付时明确标记“文档同步：已同步/待同步”
+- 若存在 API 变更但未更新文档，优先提醒并要求补齐

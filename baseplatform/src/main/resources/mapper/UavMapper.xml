@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.md.basePlatform.repository.UavMapper">
+
+    <resultMap id="UavResult" type="com.md.basePlatform.domain.Uav">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="model" column="model"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="maxFlightTimeMinutes" column="max_flight_time_minutes"/>
+        <result property="maxRangeKm" column="max_range_km"/>
+        <result property="payloadKg" column="payload_kg"/>
+        <result property="maxAltitudeMeters" column="max_altitude_meters"/>
+        <result property="maxSpeedKmh" column="max_speed_kmh"/>
+        <result property="batteryCapacityMah" column="battery_capacity_mah"/>
+        <result property="weightKg" column="weight_kg"/>
+        <result property="cameraResolution" column="camera_resolution"/>
+        <result property="hasGps" column="has_gps"/>
+        <result property="hasObstacleAvoidance" column="has_obstacle_avoidance"/>
+        <result property="purchaseDate" column="purchase_date"/>
+        <result property="warrantyExpireDate" column="warranty_expire_date"/>
+        <result property="serialNumber" column="serial_number"/>
+        <result property="department" column="department"/>
+        <result property="applicationField" column="application_field"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, code, model, manufacturer, max_flight_time_minutes, max_range_km, payload_kg, 
+        max_altitude_meters, max_speed_kmh, battery_capacity_mah, weight_kg, camera_resolution,
+        has_gps, has_obstacle_avoidance, purchase_date, warranty_expire_date, serial_number,
+        department, application_field, status, remark, created_at, updated_at
+    </sql>
+
+    <sql id="Search_Where">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                code LIKE CONCAT('%', #{keyword}, '%')
+                OR model LIKE CONCAT('%', #{keyword}, '%')
+                OR manufacturer LIKE CONCAT('%', #{keyword}, '%')
+                )
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insert" parameterType="com.md.basePlatform.domain.Uav" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO uav (
+            code, model, manufacturer, max_flight_time_minutes, max_range_km, payload_kg,
+            max_altitude_meters, max_speed_kmh, battery_capacity_mah, weight_kg, camera_resolution,
+            has_gps, has_obstacle_avoidance, purchase_date, warranty_expire_date, serial_number,
+            department, application_field, status, remark, created_at, updated_at
+        ) VALUES (
+            #{code}, #{model}, #{manufacturer}, #{maxFlightTimeMinutes}, #{maxRangeKm}, #{payloadKg},
+            #{maxAltitudeMeters}, #{maxSpeedKmh}, #{batteryCapacityMah}, #{weightKg}, #{cameraResolution},
+            #{hasGps}, #{hasObstacleAvoidance}, #{purchaseDate}, #{warrantyExpireDate}, #{serialNumber},
+            #{department}, #{applicationField}, #{status}, #{remark}, #{createdAt}, #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.md.basePlatform.domain.Uav">
+        UPDATE uav SET
+            code = #{code},
+            model = #{model},
+            manufacturer = #{manufacturer},
+            max_flight_time_minutes = #{maxFlightTimeMinutes},
+            max_range_km = #{maxRangeKm},
+            payload_kg = #{payloadKg},
+            max_altitude_meters = #{maxAltitudeMeters},
+            max_speed_kmh = #{maxSpeedKmh},
+            battery_capacity_mah = #{batteryCapacityMah},
+            weight_kg = #{weightKg},
+            camera_resolution = #{cameraResolution},
+            has_gps = #{hasGps},
+            has_obstacle_avoidance = #{hasObstacleAvoidance},
+            purchase_date = #{purchaseDate},
+            warranty_expire_date = #{warrantyExpireDate},
+            serial_number = #{serialNumber},
+            department = #{department},
+            application_field = #{applicationField},
+            status = #{status},
+            remark = #{remark},
+            updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM uav WHERE id = #{id}
+    </delete>
+
+    <select id="findById" resultMap="UavResult">
+        SELECT <include refid="Base_Column_List"/> FROM uav WHERE id = #{id}
+    </select>
+
+    <select id="countSearch" resultType="long">
+        SELECT COUNT(1) FROM uav
+        <include refid="Search_Where"/>
+    </select>
+
+    <select id="searchPage" resultMap="UavResult">
+        SELECT <include refid="Base_Column_List"/> FROM uav
+        <include refid="Search_Where"/>
+        ORDER BY updated_at DESC, id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByCode" resultType="int">
+        SELECT COUNT(1) FROM uav WHERE code = #{code}
+    </select>
+
+    <select id="countByCodeExcludeId" resultType="int">
+        SELECT COUNT(1) FROM uav WHERE code = #{code} AND id != #{id}
+    </select>
+</mapper>
