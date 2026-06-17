@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>无人机详情</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/uav}">无人机管理</a>
+        </div>
+        <p class="navbar-text navbar-right" style="margin-right: 15px;">
+            <span th:if="${loginName}" th:text="'用户：' + ${loginName}">用户</span>
+            <a class="btn btn-link btn-sm" th:href="@{/logout}">退出</a>
+        </p>
+    </div>
+</nav>
+
+<div class="container-fluid" style="max-width: 720px;">
+    <h3>无人机详情</h3>
+    <dl class="dl-horizontal" th:if="${uav}">
+        <dt>编号</dt>
+        <dd th:text="${uav.code}">-</dd>
+        <dt>型号</dt>
+        <dd th:text="${uav.model}">-</dd>
+        <dt>厂商</dt>
+        <dd th:text="${uav.manufacturer}">-</dd>
+        <dt>最大续航(分钟)</dt>
+        <dd th:text="${uav.maxFlightTimeMinutes}">-</dd>
+        <dt>最大航程(km)</dt>
+        <dd th:text="${uav.maxRangeKm}">-</dd>
+        <dt>载重(kg)</dt>
+        <dd th:text="${uav.payloadKg}">-</dd>
+        <dt>最大飞行高度(米)</dt>
+        <dd th:text="${uav.maxAltitudeMeters}">-</dd>
+        <dt>最大飞行速度(km/h)</dt>
+        <dd th:text="${uav.maxSpeedKmh}">-</dd>
+        <dt>电池容量(mAh)</dt>
+        <dd th:text="${uav.batteryCapacityMah}">-</dd>
+        <dt>机身重量(kg)</dt>
+        <dd th:text="${uav.weightKg}">-</dd>
+        <dt>摄像头分辨率</dt>
+        <dd th:text="${uav.cameraResolution}">-</dd>
+        <dt>GPS功能</dt>
+        <dd th:text="${uav.hasGps ? '是' : '否'}">-</dd>
+        <dt>避障功能</dt>
+        <dd th:text="${uav.hasObstacleAvoidance ? '是' : '否'}">-</dd>
+        <dt>购买日期</dt>
+        <dd th:text="${uav.purchaseDate}">-</dd>
+        <dt>保修到期日期</dt>
+        <dd th:text="${uav.warrantyExpireDate}">-</dd>
+        <dt>序列号</dt>
+        <dd th:text="${uav.serialNumber}">-</dd>
+        <dt>所属部门</dt>
+        <dd th:text="${uav.department}">-</dd>
+        <dt>应用领域</dt>
+        <dd th:text="${uav.applicationField}">-</dd>
+        <dt>状态</dt>
+        <dd th:text="${uav.status}">-</dd>
+        <dt>备注</dt>
+        <dd th:text="${uav.remark}">-</dd>
+        <dt>创建时间</dt>
+        <dd th:text="${uav.createdAt}">-</dd>
+        <dt>更新时间</dt>
+        <dd th:text="${uav.updatedAt}">-</dd>
+    </dl>
+
+    <p>
+        <a class="btn btn-warning" th:href="@{/uav/edit/{id}(id=${uav.id})}">编辑</a>
+        <a class="btn btn-default" th:href="@{/uav}">返回列表</a>
+    </p>
+</div>
+
+<script th:src="@{/webjars/jquery/1.12.4/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+</body>
+</html>

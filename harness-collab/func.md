@@ -2,7 +2,7 @@
 
 本文档是项目所有功能的资产登记表，记录每个功能的当前状态、负责人和关联文档。每次功能状态发生变更时，必须同步更新本表。
 
-**最后更新**：请在每次更新后修改此处日期。
+**最后更新**：2026-06-17
 
 ---
 
@@ -11,6 +11,7 @@
 | 功能名称 | 状态 | 负责人 | 需求文档 | 设计文档 | API 文档 | 最后更新 |
 |----------|------|--------|----------|----------|----------|----------|
 | 用户管理 | 已交付 | @dev | [用户管理需求](01-product-specs/user-management-spec.md) | [用户管理设计](02-design-docs/user-management-design.md) | [用户 API](04-api-docs/user-api.md) | 2024-01-01 |
+| 无人机信息管理 | 🟡 开发中 | @dev | [无人机信息管理需求](01-product-specs/uav-management-spec.md) | [无人机信息管理设计](02-design-docs/uav-management-design.md) | [无人机页面 API](04-api-docs/uav-page-api.md) | 2026-06-17 |
 
 ---
 

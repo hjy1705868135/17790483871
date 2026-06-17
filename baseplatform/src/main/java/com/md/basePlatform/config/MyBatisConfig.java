@@ -5,22 +5,16 @@
  */
 package com.md.basePlatform.config;
 
-// 导入MyBatis的Mapper扫描注解
 import org.mybatis.spring.annotation.MapperScan;
-// 导入Spring框架配置注解
 import org.springframework.context.annotation.Configuration;
 
 /**
  * MyBatis配置类
- * 配置Mapper接口的扫描路径
- * 使用@Configuration注解标记，Spring会自动扫描并加载配置
- * 
+ * 配置Mapper接口的扫描路径（统一使用 repository 包）
  * 注意：SqlSessionFactory由Spring Boot自动配置处理，无需手动创建
  */
 @Configuration
-// @MapperScan注解指定要扫描的Mapper接口所在的包
-// Spring会自动为包下的所有接口创建实现类
-@MapperScan("com.md.basePlatform.mapper")
+@MapperScan("com.md.basePlatform.repository")
 public class MyBatisConfig {
     // SqlSessionFactory由Spring Boot自动配置，无需手动创建
     // 配置信息从application.properties中读取
