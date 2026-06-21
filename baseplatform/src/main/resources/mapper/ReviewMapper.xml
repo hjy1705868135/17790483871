@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.md.basePlatform.repository.ReviewRepository">
+    
+    <!-- 查询商品评价列表（分页） -->
+    <select id="selectProductReviews" resultType="com.md.basePlatform.domain.Review">
+        SELECT 
+            id, order_id AS orderId, order_item_id AS orderItemId, product_id AS productId,
+            user_id AS userId, rating, content, images, reply, reply_time AS replyTime,
+            created_at AS createdAt, updated_at AS updatedAt, deleted
+        FROM t_review
+        WHERE product_id = #{productId}
+          AND deleted = 0
+        ORDER BY created_at DESC
+    </select>
+    
+    <!-- 查询用户评价列表（分页） -->
+    <select id="selectUserReviews" resultType="com.md.basePlatform.domain.Review">
+        SELECT 
+            id, order_id AS orderId, order_item_id AS orderItemId, product_id AS productId,
+            user_id AS userId, rating, content, images, reply, reply_time AS replyTime,
+            created_at AS createdAt, updated_at AS updatedAt, deleted
+        FROM t_review
+        WHERE user_id = #{userId}
+          AND deleted = 0
+        ORDER BY created_at DESC
+    </select>
+</mapper>

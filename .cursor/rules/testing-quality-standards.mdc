@@ -1,0 +1,25 @@
+---
+description: 测试分层策略与覆盖率要求
+alwaysApply: true
+---
+
+# 测试与质量规范
+
+## 测试分层策略
+
+- Service 层：`@ExtendWith(MockitoExtension.class)`，外部依赖必须 mock
+- Controller 层：`@WebMvcTest` + `@MockBean`，校验状态码/响应体/参数校验
+- Repository 层：JPA 使用 `@DataJpaTest`，关注自定义查询正确性
+- 集成测试：`@SpringBootTest`，数量少于单元测试，独立于切片测试
+
+## 命名与映射
+
+- 测试方法统一：`should_[预期行为]_when_[条件]`
+- 测试类与被测类保持相同包路径，位于 `src/test/java`
+- 业务类变更时同步补齐测试类与测试用例
+
+## 覆盖率门禁
+
+- `harness-new`：行覆盖率 >= 80%
+- `harness-legacy`：仅出报告，不设阈值
+- 完成编码后提示执行：`mvn clean verify -Pharness-new`

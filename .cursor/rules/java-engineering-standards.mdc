@@ -1,0 +1,25 @@
+---
+description: Java 工程规范与四层架构约束
+alwaysApply: true
+---
+
+# Java 工程规范
+
+本规则在 Cursor 对话中持续生效，约束工作区内所有 Spring Boot 子项目。
+
+## 四层架构约束
+
+- 合法依赖：`controller -> service`、`service -> domain`、`service -> repository`、`repository -> domain`
+- 禁止跨层：controller 直接调 repository、repository 反调 service、domain 依赖上层
+- 生成代码前必须检查包路径和依赖方向，不合规时拒绝生成并给出替代方案
+
+## 包结构约定
+
+- Java 类必须落在合法层级包：`controller | service | domain | repository | config | common | exception`
+- 新建包时同步维护 `package-info.java`
+
+## 编码规范
+
+- 公共方法必须补齐 Javadoc（`@param`、`@return`、`@throws`）
+- 禁止字段注入 `@Autowired`，统一构造器注入（可用 Lombok `@RequiredArgsConstructor`）
+- 类名、方法名、常量名遵循标准命名约定
